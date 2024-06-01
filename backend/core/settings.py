@@ -156,9 +156,16 @@ REST_FRAMEWORK = {
     )
 }
 
-#Simplejwt settings
+
+AUTH_USER_MODEL = "api.CustomUser"
+
+# Simplejwt settings
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=2)
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=2),
 }
+
+# Cors settings
+
+CORS_ORIGIN_ALLOWED = ["http://localhost:5173"]

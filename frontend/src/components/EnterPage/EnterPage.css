@@ -1,0 +1,66 @@
+.enter-container{
+    width: 500px;
+    height: 700px;
+    border-radius: 15px;
+    box-shadow:  0px 0px 25px black;
+    position: relative;
+}
+
+.enter-container .nav-btn{
+    display: flex;
+    gap: 25px;
+    position: absolute;
+    transform: translateX(-50%);
+    left: 50%;
+    top: 5%;
+    padding: 15px 30px;
+    border-radius: 30px;
+    width: 260px;
+    height: 65px;
+    overflow: hidden;
+    box-shadow: 5px 5px 20px black;
+}
+.enter-container .slider{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 1;
+    width: 100px;
+    height: 65px;
+    border-radius: 30px;
+    background-image: linear-gradient(to right,
+                                    rgb(255, 195, 110),
+                                    rgb(255, 146, 91));
+    transition: .4s;
+}
+.enter-container .nav-btn button{
+    background: none;
+    border: none;
+    font-size: 20px;
+    z-index: 5;
+}
+.enter-container .slider.offset{
+    left: 90px;
+    width: 190px;
+}
+.wrapper{
+    height: max-content;
+    width: max-content;
+    overflow: hidden;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    width: 380px;
+    height: 465px;
+}
+.form-slider {
+    padding: 10px;
+    position: absolute;
+    display: flex;
+    width: 100%;
+    transition: .5s;
+}
+.form-slider.move{
+    transform: translateX(-90%);
+}

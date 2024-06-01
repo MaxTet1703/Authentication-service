@@ -13,7 +13,7 @@ class CustomUserRegisterSerializer(serializers.Serializer):
     password2 = serializers.CharField()
 
     def validate(self, data):
-        for field in ("email", "last_name", "first_name"
+        for field in ("email", "last_name", "first_name",
                       "password1", "password2"):
             if not data.get(field):
                 raise ValidationError(f"{field} must be not empty")      
@@ -21,9 +21,11 @@ class CustomUserRegisterSerializer(serializers.Serializer):
             raise ValidationError("password1 must match with passwrd2")      
         if CustomUser.objects.filter(email=data["email"]).exists():
             raise ValidationError("User with thise email is already exist")
-        return data
+        return data 
     
     def save(self):
+        self.validated_data['password'] = self.validated_data.pop('password1')
+        self.validated_data.pop('password2')
         CustomUser.objects.create_user(**self.validated_data)
 
 
@@ -35,12 +37,13 @@ class CustomUserLoginSerializer(serializers.Serializer):
         if not (data.get("email") and data.get("password")):
             raise ValidationError("email and password must be not empty")
         user = CustomUser.objects.filter(email=data["email"])
-        if user.exists():
+        if not user.exists():
             raise ValidationError("user with this email doesnt exist")
         user = user.first()
-        user = user.check_password(data["password"])
-        if not user:
+        user_check = user.check_password(data["password"])
+        if not user_check:
             raise ValidationError("Email or password are wrong")
+        self.user = user
         return data
     
     def get_user(self):

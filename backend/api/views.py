@@ -1,11 +1,13 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.parsers import FormParser, MultiPartParser
 
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .serializers import (CustomUserRegisterSerializer,
                           CustomUserLoginSerializer)
@@ -13,53 +15,37 @@ from .serializers import (CustomUserRegisterSerializer,
 
 class UserRegister(APIView):
 
+    parser_classes = (FormParser, MultiPartParser)
+
     @swagger_auto_schema(
         operation_description="User register with form",
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            properties={
-                "email": openapi.Schema(type=openapi.TYPE_STRING, default="example@gmail.com"),
-                "first_name": openapi.Schema(type=openapi.TYPE_STRING, default="Max"),
-                "last_name": openapi.Schema(type=openapi.TYPE_STRING, default="Tet"),
-                "image": openapi.Schema(type=openapi.TYPE_STRING, default=""),
-                "password1": openapi.Schema(type=openapi.TYPE_STRING, default="tinotarantino777"),
-                "password2": openapi.Schema(type=openapi.TYPE_STRING, default="tinotarantion777"),
-
-            }
-        )
+        request_body=CustomUserRegisterSerializer
     )
     def post(self, request):
-        serializer = CustomUserRegisterSerializer(request.data)
+        serializer = CustomUserRegisterSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({"success": "user was created successfylly"}, status=status.HTTP_201_CREATED)
+        print(serializer.errors)
         return Response({"error": "data are incorrect"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UserLogin(APIView):
+class UserLogin(TokenObtainPairView):
+
+    parser_classes = (FormParser,)
+    serializer_class = CustomUserLoginSerializer
 
     @swagger_auto_schema(
         operation_description="User login with form",
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            properties={
-                "email": openapi.Schema(type=openapi.TYPE_STRING, default="example@gmail.com"),
-                "password": openapi.Schema(type=openapi.TYPE_STRING, default="tinotarantion777"),
-
-            }
-        )
+        request_body=CustomUserLoginSerializer
     )
     def post(self, request):
-        serializer = CustomUserLoginSerializer(request.data)
+        serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            user = serializer.get_user()
-            token = RefreshToken.for_user(user)
-            token.payload.update({
-                "user_id": user.pk,
-                "user_email": user.email
-            })
+            token = RefreshToken.for_user(serializer.user)
             return Response({
                 "refreshe_token": str(token),
                 "access_token": str(token.access_token)
             }, status=status.HTTP_200_OK)
+        print(serializer.errors)
         return Response({"error": "Password or email are wrong"}, status=status.HTTP_400_BAD_REQUEST)

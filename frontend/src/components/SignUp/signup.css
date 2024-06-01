@@ -1,0 +1,26 @@
+#signup{
+    padding: 15px 40px;
+    width: 100%;
+}
+#signup input{
+    margin: 5px;
+    padding: 10px 7px;
+    border-radius: 20px;
+    border: 1px solid black;
+}
+
+.profile-image{
+    width: 70px;
+    height: 70px;
+    margin: 5px
+}
+#signup button{
+    background: none;
+    border: none;
+    margin: 5px 35px;
+    padding: 10px 20px;
+    border-radius: 20px;
+    background-image: linear-gradient(to right,
+                                    rgb(255, 195, 110),
+                                    rgb(255, 146, 91)); 
+}
