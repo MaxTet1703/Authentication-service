@@ -22,6 +22,7 @@ class UserRegister(APIView):
         request_body=CustomUserRegisterSerializer
     )
     def post(self, request):
+        print(request.data)
         serializer = CustomUserRegisterSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -32,7 +33,7 @@ class UserRegister(APIView):
 
 class UserLogin(TokenObtainPairView):
 
-    parser_classes = (FormParser,)
+    parser_classes = (FormParser, MultiPartParser)
     serializer_class = CustomUserLoginSerializer
 
     @swagger_auto_schema(
@@ -44,7 +45,7 @@ class UserLogin(TokenObtainPairView):
         if serializer.is_valid():
             token = RefreshToken.for_user(serializer.user)
             return Response({
-                "refreshe_token": str(token),
+                "refresh_token": str(token),
                 "access_token": str(token.access_token)
             }, status=status.HTTP_200_OK)
         print(serializer.errors)

@@ -64,3 +64,22 @@
 .form-slider.move{
     transform: translateX(-90%);
 }
+div.message{
+    position: fixed;
+    right: 15px;
+    top: 15px;
+    box-shadow: 1px 1px 10px black;
+    padding: 10px 25px;
+    transition: .4s;
+}
+div.message.hide{
+    right: -30%;
+}
+div.message p{
+    margin: 10px;
+}
+div.message span{
+    position: absolute;
+    right: 5px;
+    top: 1px;
+}
