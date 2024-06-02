@@ -2,9 +2,14 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import './signin.css'
 import axios from 'axios'
 import $ from 'jquery'
+import { UserContext } from '../../App'
+import { useContext } from 'react'
 
 
 function SignIn({ setMessage }){
+
+    const [user, setUser] = useContext(UserContext)
+
     const handleSubmit = (e) => {
         e.preventDefault()
         const data = new FormData(e.target)
@@ -18,6 +23,13 @@ function SignIn({ setMessage }){
             localStorage.setItem("access_token", response.data.access_token);
             localStorage.setItem("refresh_token", response.data.refresh_token);
             $("div.message").removeClass("hide");
+            setUser((prev) => {
+                return {
+                    ...prev,
+                    signed_in: true
+                }
+            })
+            console.log(user.signed_in)
         })
         .catch(( response ) => {
             setMessage(response.response.data.error)
