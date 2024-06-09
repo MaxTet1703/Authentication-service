@@ -20,16 +20,14 @@ function SignIn({ setMessage }){
             }
         })
         .then(( response ) => {
-            localStorage.setItem("access_token", response.data.access_token);
-            localStorage.setItem("refresh_token", response.data.refresh_token);
-            $("div.message").removeClass("hide");
+            localStorage.setItem("accessToken", response.data.access);
+            localStorage.setItem("refreshToken", response.data.refresh);
             setUser((prev) => {
                 return {
                     ...prev,
                     signed_in: true
                 }
             })
-            console.log(user.signed_in)
         })
         .catch(( response ) => {
             setMessage(response.response.data.error)

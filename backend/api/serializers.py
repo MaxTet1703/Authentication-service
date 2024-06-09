@@ -45,6 +45,17 @@ class CustomUserLoginSerializer(serializers.Serializer):
             raise ValidationError("Email or password are wrong")
         self.user = user
         return data
+
+
+class CustomUserSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField("get_image_uri")
+
+    class Meta: 
+        model = CustomUser
+        fields = ('email', 'first_name', 'last_name',
+                  'image')
     
-    def get_user(self):
-        CustomUser.objects.filter(email=self.validated_data["email"]).first()
+    def get_image_uri(self, obj):
+        return "http://" + self.context.get(
+            "request"
+            ).get_host() + obj.image.url
